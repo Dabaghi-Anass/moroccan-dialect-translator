@@ -17,9 +17,9 @@ import jakarta.ws.rs.core.Response.ResponseBuilder;
 
 @Path("translate")
 public class Translator {
-	private String systemInstructions = "you are a translator from english to moroccan arabic (darija) and vise versa, you will receive a text and from and to and translate it don't make up extra words JUST THE TRANSLATION";
-	public String GEMINI_API_KEY = "<YOUR_GEMINI_API_KEY>";
-	public String geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent?key="+GEMINI_API_KEY;
+	private String systemInstructions = "you are a translator from english to moroccan dialect (darija) and vise versa, you will receive a text and from and to and translate it don't make up extra words JUST THE TRANSLATION and make sure it's MOROCCAN ARABIC";
+	public String GEMINI_API_KEY = "...";
+	public String geminiUrl = "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash-8b:generateContent?key="+GEMINI_API_KEY;
 	public record TranslationRequest(String text, String from, String to) {}
 	public record TranslationResponse(String translatedText) {}
 	
@@ -28,7 +28,7 @@ public class Translator {
 		return String.format("from=%s;to=%s;text=%s;", request.from(), request.to(), request.text());
 	}
 
-    private  String sendGeminiRequest(TranslationRequest translationRequest){
+    private  String translate(TranslationRequest translationRequest){
     	try {
             String prompt = _formTranslationRequest(translationRequest);
             String jsonRequestBody = String.format("{"
@@ -51,7 +51,7 @@ public class Translator {
                     + "    }"
                     + "  ],"
                     + "\"generationConfig\": {"
-                    + "   \"temperature\": 1,"
+                    + "   \"temperature\": 1.6,"
                     + "    \"topK\": 40,"
                     + "    \"topP\": 0.95,"
                     + "    \"maxOutputTokens\": 8192,"
@@ -87,8 +87,8 @@ public class Translator {
 	@POST
     @Consumes(MediaType.APPLICATION_JSON)
     @Produces(MediaType.APPLICATION_JSON)
-    public Response translate(TranslationRequest request) {
-		String translatedText = sendGeminiRequest(request);
+    public Response handleTranslate(TranslationRequest request) {
+		String translatedText = translate(request);
         TranslationResponse response = new TranslationResponse(translatedText);
         ResponseBuilder responseBuilder = Response.ok(response);
         responseBuilder.header("Access-Control-Allow-Origin", "*");

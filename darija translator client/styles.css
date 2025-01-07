@@ -1,6 +1,6 @@
 html {
-	--bg-clr: #f1f1f1;
-	--bg-light-clr: #fff;
+	--bg-clr: #d6d6d6;
+	--bg-light-clr: #f1f1f1;
 	--text-clr: #333;
 	--text-light-clr: #666;
 	--accent-clr: #0040dd;
@@ -159,4 +159,7 @@ html.dark .moon {
 
 html.dark .sun {
 	display: block;
+}
+html.dark textarea {
+	border-color: #3a3a3a;
 }
